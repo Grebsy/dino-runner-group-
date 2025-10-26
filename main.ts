@@ -1,6 +1,6 @@
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (TRex.isHittingTile(CollisionDirection.Bottom)) {
-        TRex.vy = -220
+        TRex.vy = -250
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
@@ -20,6 +20,9 @@ let projectile: Sprite = null
 let anakdinoo: Sprite = null
 let TRex: Sprite = null
 game.splash("Dino Runner", "By; Muhammad Farid Pasha Dan Rakrian Mahesa Arby")
+let projectilemaxspeed = -100
+let projectileminspeed = -120
+let backgroundspeed = -50
 tiles.setTilemap(tilemap`level2`)
 scene.setBackgroundImage(img`
     9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -169,7 +172,7 @@ TRex = sprites.create(img`
     ......ccccbddddbc.......
     ..........cd5555dc......
     `, SpriteKind.Player)
-TRex.ay = 400
+TRex.ay = 700
 animation.runImageAnimation(
 TRex,
 [img`
@@ -327,8 +330,19 @@ TRex,
 true
 )
 tiles.placeOnTile(TRex, tiles.getTileLocation(2, 0))
+game.onUpdateInterval(5000, function () {
+    if (backgroundspeed < -150) {
+        backgroundspeed = -150
+    }
+    if (projectileminspeed < -300) {
+        projectileminspeed = -300
+    }
+    if (projectilemaxspeed < -150) {
+        projectilemaxspeed = -280
+    }
+})
 game.onUpdateInterval(1500, function () {
-    scroller.scrollBackgroundWithSpeed(-50, 0)
+    scroller.scrollBackgroundWithSpeed(backgroundspeed, 0)
     projectile = sprites.createProjectileFromSide(img`
         . . . . . . . 8 8 8 8 8 . . . . 
         . . . . . 8 8 6 6 6 6 6 8 . . . 
@@ -346,7 +360,7 @@ game.onUpdateInterval(1500, function () {
         8 8 8 8 f f f 8 8 8 8 f f f 8 8 
         . 8 8 f f f b f 8 8 f f f b f . 
         . . . . c b b . . . . c b b . . 
-        `, randint(-120, -100), 0)
+        `, randint(projectileminspeed, projectilemaxspeed), 0)
     animation.runImageAnimation(
     projectile,
     assets.animation`kaijuBabyWalkRight`,
